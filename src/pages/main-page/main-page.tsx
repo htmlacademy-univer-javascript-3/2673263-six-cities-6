@@ -62,7 +62,7 @@ function MainPage({ offersCount }: MainPageProps): JSX.Element {
                 </a>
               </li>
               <li className="locations__item">
-                {/* допускается без href, оставлю как в макете */}
+                {}
                 <a className="locations__item-link tabs__item tabs__item--active">
                   <span>Amsterdam</span>
                 </a>
@@ -105,11 +105,46 @@ function MainPage({ offersCount }: MainPageProps): JSX.Element {
               </form>
 
               <div className="cities__places-list places__list tabs__content">
-                <OfferCard />
-                <OfferCard />
-                <OfferCard />
-                <OfferCard />
-                <OfferCard />
+                <OfferCard
+                  image="img/apartment-01.jpg"
+                  isPremium
+                  price={120}
+                  isFavorite={false}
+                  rating={4.8}
+                  title="Beautiful & luxurious apartment at great location"
+                  type="Apartment"
+                />
+                <OfferCard
+                  image="img/room.jpg"
+                  price={80}
+                  isFavorite
+                  rating={4}
+                  title="Wood and stone place"
+                  type="Room"
+                />
+                <OfferCard
+                  image="img/apartment-02.jpg"
+                  price={132}
+                  rating={4}
+                  title="Canal View Prinsengracht"
+                  type="Apartment"
+                />
+                <OfferCard
+                  isPremium
+                  image="img/apartment-03.jpg"
+                  price={180}
+                  rating={5}
+                  title="Nice, cozy, warm big bed apartment"
+                  type="Apartment"
+                />
+                <OfferCard
+                  image="img/room.jpg"
+                  price={80}
+                  isFavorite
+                  rating={4}
+                  title="Wood and stone place"
+                  type="Room"
+                />
               </div>
             </section>
 
