@@ -1,6 +1,6 @@
 function MainEmptyPage(): JSX.Element {
-    return (
-        <div className="page page--gray page--main">
+  return (
+    <div className="page page--gray page--main">
       <header className="header">
         <div className="container">
           <div className="header__wrapper">
@@ -81,7 +81,8 @@ function MainEmptyPage(): JSX.Element {
         </div>
       </main>
     </div>
-    )
+  );
 }
 
 export default MainEmptyPage;
+
