@@ -3,7 +3,7 @@ type OfferCardProps = {
   image: string;
   price: number;
   isFavorite?: boolean;
-  rating: number; // в процентах или 0–5
+  rating: number;
   title: string;
   type: string;
 };
