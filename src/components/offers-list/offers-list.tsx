@@ -8,7 +8,7 @@ type OffersListProps = {
 };
 
 function OffersList({ offers, className }: OffersListProps): JSX.Element {
-  const [_activeOfferId, setActiveOfferId] = useState<string | null>(null);
+  const [, setActiveOfferId] = useState<string | null>(null);
   return (
     <div className={className ?? 'cities__places-list places__list tabs__content'}>
       {offers.map((offer) => (
