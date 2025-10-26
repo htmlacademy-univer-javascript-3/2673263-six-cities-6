@@ -1,10 +1,12 @@
-import OfferCard from '../../components/offer-card/offer-card';
+import OffersList from '../../components/offers-list/offers-list.tsx';
+import type {Offer} from '../../types/offer.ts';
 
 type MainPageProps = {
   offersCount: number;
+  offers: Offer[];
 };
 
-function MainPage({ offersCount }: MainPageProps): JSX.Element {
+function MainPage({ offersCount, offers }: MainPageProps): JSX.Element {
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -104,48 +106,7 @@ function MainPage({ offersCount }: MainPageProps): JSX.Element {
                 </ul>
               </form>
 
-              <div className="cities__places-list places__list tabs__content">
-                <OfferCard
-                  image="img/apartment-01.jpg"
-                  isPremium
-                  price={120}
-                  isFavorite={false}
-                  rating={4.8}
-                  title="Beautiful & luxurious apartment at great location"
-                  type="Apartment"
-                />
-                <OfferCard
-                  image="img/room.jpg"
-                  price={80}
-                  isFavorite
-                  rating={4}
-                  title="Wood and stone place"
-                  type="Room"
-                />
-                <OfferCard
-                  image="img/apartment-02.jpg"
-                  price={132}
-                  rating={4}
-                  title="Canal View Prinsengracht"
-                  type="Apartment"
-                />
-                <OfferCard
-                  isPremium
-                  image="img/apartment-03.jpg"
-                  price={180}
-                  rating={5}
-                  title="Nice, cozy, warm big bed apartment"
-                  type="Apartment"
-                />
-                <OfferCard
-                  image="img/room.jpg"
-                  price={80}
-                  isFavorite
-                  rating={4}
-                  title="Wood and stone place"
-                  type="Room"
-                />
-              </div>
+              <OffersList offers={offers} />
             </section>
 
             <div className="cities__right-section">
