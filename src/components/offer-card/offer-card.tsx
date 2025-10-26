@@ -1,43 +1,73 @@
+import {Link} from 'react-router-dom';
+import {Offer} from '../../types/offer.ts';
+import {AppRoute} from '../../const.ts';
+
 type OfferCardProps = {
-  isPremium?: boolean;
-  image: string;
-  price: number;
-  isFavorite?: boolean;
-  rating: number;
-  title: string;
-  type: string;
+  offer: Offer;
+  onHover?: (offerId: string | null) => void;
+  variant?: 'cities' | 'favorites' | 'near-places';
 };
 
-function OfferCard({
-  isPremium = false,
-  image,
-  price,
-  isFavorite = false,
-  rating,
-  title,
-  type,
-}: OfferCardProps): JSX.Element {
+const VARIANT_CFG = {
+  cities: {
+    article: 'cities__card place-card',
+    imageWrap: 'cities__image-wrapper place-card__image-wrapper',
+    infoWrap: 'place-card__info',
+    size: { width: 260, height: 200 },
+  },
+  favorites: {
+    article: 'favorites__card place-card',
+    imageWrap: 'favorites__image-wrapper place-card__image-wrapper',
+    infoWrap: 'favorites__card-info place-card__info',
+    size: { width: 150, height: 110 },
+  },
+  'near-places': {
+    article: 'near-places__card place-card',
+    imageWrap: 'near-places__image-wrapper place-card__image-wrapper',
+    infoWrap: 'place-card__info',
+    size: { width: 260, height: 200 },
+  },
+} as const;
+
+function OfferCard({ offer, onHover, variant = 'cities' }: OfferCardProps): JSX.Element {
+  const {
+    id,
+    isPremium,
+    images,
+    price,
+    isFavorite,
+    rating,
+    title,
+    type,
+  } = offer;
+  const previewImage = images[0];
+  const ratingWidth = `${(rating / 5) * 100}%`;
+  const cfg = VARIANT_CFG[variant];
   return (
-    <article className="cities__card place-card">
+    <article
+      className={cfg.article}
+      onMouseEnter={onHover ? () => onHover(id) : undefined}
+      onMouseLeave={onHover ? () => onHover(null) : undefined}
+    >
       {isPremium && (
         <div className="place-card__mark">
           <span>Premium</span>
         </div>
       )}
 
-      <div className="cities__image-wrapper place-card__image-wrapper">
-        <a href="#">
+      <div className={cfg.imageWrap}>
+        <Link to={`${AppRoute.Offer}/${id}`}>
           <img
             className="place-card__image"
-            src={image}
-            width={260}
-            height={200}
-            alt="Place image"
+            src={previewImage}
+            width={cfg.size.width}
+            height={cfg.size.height}
+            alt={title}
           />
-        </a>
+        </Link>
       </div>
 
-      <div className="place-card__info">
+      <div className={cfg.infoWrap}>
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
             <b className="place-card__price-value">&euro;{price}</b>
@@ -60,13 +90,13 @@ function OfferCard({
 
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: `${(rating / 5) * 100}%` }}></span>
+            <span style={{ width: ratingWidth }}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
 
         <h2 className="place-card__name">
-          <a href="#">{title}</a>
+          <Link to={`${AppRoute.Offer}/${id}`}>{title}</Link>
         </h2>
         <p className="place-card__type">{type}</p>
       </div>
