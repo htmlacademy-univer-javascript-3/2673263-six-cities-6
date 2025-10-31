@@ -1,5 +1,5 @@
 import {ChangeEvent, Fragment, useState} from 'react';
-import {maxCommentLength, minCommentLength} from '../../const.ts';
+import {MAX_COMMENT_LENGTH, MIN_COMMENT_LENGTH} from '../../const.ts';
 
 
 const ratingMap = {
@@ -14,8 +14,8 @@ function ReviewForm() {
   const [comment, setComment] = useState('');
   const [rating, setRating] = useState('');
 
-  const isValid = comment.length >= minCommentLength &&
-    comment.length <= maxCommentLength &&
+  const isValid = comment.length >= MIN_COMMENT_LENGTH &&
+    comment.length <= MAX_COMMENT_LENGTH &&
     rating !== '';
 
 
@@ -64,7 +64,7 @@ function ReviewForm() {
         <p className="reviews__help">
           To submit review please make sure to set <span className="reviews__star">rating</span> and
           describe your
-          stay with at least <b className="reviews__text-amount">50 characters</b>.
+          stay with at least <b className="reviews__text-amount">{MIN_COMMENT_LENGTH}</b>.
         </p>
         <button className="reviews__submit form__submit button" type="submit" disabled={!isValid}>Submit</button>
       </div>
