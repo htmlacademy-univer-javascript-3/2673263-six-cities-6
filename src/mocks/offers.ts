@@ -17,10 +17,10 @@ export const offers: Offer[] = [
       'https://14.design.htmlacademy.pro/static/hotel/7.jpg',
     ],
     city: {
-      name: 'Paris',
-      location: { latitude: 48.85661, longitude: 2.351499, zoom: 13 },
+      name: 'Amsterdam',
+      location: { latitude: 52.37514938496378, longitude: 4.893877537499948, zoom: 13 },
     },
-    location: { latitude: 48.86861, longitude: 2.342499, zoom: 16 },
+    location: { latitude: 52.3909553943508, longitude: 4.85309666406198, zoom: 16 },
     goods: [
       'Laptop friendly workspace',
       'Washer',
@@ -58,10 +58,10 @@ export const offers: Offer[] = [
       'https://14.design.htmlacademy.pro/static/hotel/4.jpg',
     ],
     city: {
-      name: 'Paris',
-      location: { latitude: 48.85661, longitude: 2.351499, zoom: 13 },
+      name: 'Amsterdam',
+      location: { latitude: 52.37514938496378, longitude: 4.893877537499948, zoom: 13 },
     },
-    location: { latitude: 48.85861, longitude: 2.330499, zoom: 16 },
+    location: { latitude: 52.3609553943508, longitude: 4.85309666406198, zoom: 16 },
     goods: ['Towels', 'Wi-Fi', 'Fridge'],
     host: {
       isPro: true,
@@ -91,10 +91,10 @@ export const offers: Offer[] = [
       'https://14.design.htmlacademy.pro/static/hotel/17.jpg',
     ],
     city: {
-      name: 'Paris',
-      location: { latitude: 48.85661, longitude: 2.351499, zoom: 13 },
+      name: 'Amsterdam',
+      location: { latitude: 52.37514938496378, longitude: 4.893877537499948, zoom: 13 },
     },
-    location: { latitude: 48.83461, longitude: 2.335499, zoom: 16 },
+    location: { latitude: 52.3909553943508, longitude: 4.929309666406198, zoom: 16 },
     goods: ['Baby seat', 'Wi-Fi', 'Washer', 'Washing machine'],
     host: {
       isPro: true,
@@ -124,10 +124,10 @@ export const offers: Offer[] = [
       'https://14.design.htmlacademy.pro/static/hotel/4.jpg',
     ],
     city: {
-      name: 'Paris',
-      location: { latitude: 48.85661, longitude: 2.351499, zoom: 13 },
+      name: 'Amsterdam',
+      location: { latitude: 52.37514938496378, longitude: 4.893877537499948, zoom: 13 },
     },
-    location: { latitude: 48.87961, longitude: 2.353499, zoom: 16 },
+    location: { latitude: 52.3809553943508, longitude: 4.939309666406198, zoom: 16 },
     goods: [
       'Kitchen',
       'Wi-Fi',

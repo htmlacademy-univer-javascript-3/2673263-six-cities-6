@@ -1,5 +1,7 @@
 import OffersList from '../../components/offers-list/offers-list.tsx';
 import type {Offer} from '../../types/offer.ts';
+import Map from '../../components/map/map.tsx';
+import {useState} from 'react';
 
 type MainPageProps = {
   offersCount: number;
@@ -7,6 +9,9 @@ type MainPageProps = {
 };
 
 function MainPage({ offersCount, offers }: MainPageProps): JSX.Element {
+  const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
+  const city = offers[0].city;
+
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -106,11 +111,11 @@ function MainPage({ offersCount, offers }: MainPageProps): JSX.Element {
                 </ul>
               </form>
 
-              <OffersList offers={offers} />
+              <OffersList offers={offers} onOfferHover={setActiveOfferId} />
             </section>
 
             <div className="cities__right-section">
-              <section className="cities__map map"></section>
+              <Map city={city} offers={offers} activeOfferId={activeOfferId} />
             </div>
           </div>
         </div>
