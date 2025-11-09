@@ -64,7 +64,7 @@ function ReviewForm() {
         <p className="reviews__help">
           To submit review please make sure to set <span className="reviews__star">rating</span> and
           describe your
-          stay with at least <b className="reviews__text-amount">{MIN_COMMENT_LENGTH}</b>.
+          stay with at least <b className="reviews__text-amount">{MIN_COMMENT_LENGTH} characters</b>.
         </p>
         <button className="reviews__submit form__submit button" type="submit" disabled={!isValid}>Submit</button>
       </div>

@@ -1,6 +1,6 @@
 import {Link} from 'react-router-dom';
-import {Offer} from '../../types/offer.ts';
-import {AppRoute} from '../../const.ts';
+import type {Offer} from '../../types/offer';
+import {AppRoute} from '../../const';
 
 type OfferCardProps = {
   offer: Offer;
@@ -40,9 +40,16 @@ function OfferCard({ offer, onHover, variant = 'cities' }: OfferCardProps): JSX.
     title,
     type,
   } = offer;
+
   const previewImage = images[0];
   const ratingWidth = `${(rating / 5) * 100}%`;
   const cfg = VARIANT_CFG[variant];
+
+  const linkTo =
+    variant === 'near-places'
+      ? '/'
+      : `${AppRoute.Offer}/${id}`;
+
   return (
     <article
       className={cfg.article}
@@ -56,7 +63,7 @@ function OfferCard({ offer, onHover, variant = 'cities' }: OfferCardProps): JSX.
       )}
 
       <div className={cfg.imageWrap}>
-        <Link to={`${AppRoute.Offer}/${id}`}>
+        <Link to={linkTo}>
           <img
             className="place-card__image"
             src={previewImage}
@@ -96,7 +103,7 @@ function OfferCard({ offer, onHover, variant = 'cities' }: OfferCardProps): JSX.
         </div>
 
         <h2 className="place-card__name">
-          <Link to={`${AppRoute.Offer}/${id}`}>{title}</Link>
+          <Link to={linkTo}>{title}</Link>
         </h2>
         <p className="place-card__type">{type}</p>
       </div>
