@@ -9,17 +9,16 @@ import PrivateRoute from '../private-route/private-route.tsx';
 import type {Offer} from '../../types/offer.ts';
 
 type AppProps = {
-  offersCount: number;
   offers: Offer[];
 };
 
-function App({ offersCount, offers }: AppProps): JSX.Element {
+function App({ offers }: AppProps): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
         <Route
           path={AppRoute.Main}
-          element={<MainPage offersCount={offersCount} offers={offers} />}
+          element={<MainPage />}
         />
         <Route
           path={AppRoute.Login}
