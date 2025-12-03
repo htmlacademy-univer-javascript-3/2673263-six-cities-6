@@ -1,12 +1,13 @@
 import type { City, Offer } from '../types/offer';
 import { offers } from '../mocks/offers';
 import { getCities } from '../mocks/cities';
-import {Action} from '../const.ts';
-import {changeCity, fillOffer} from './action';
+import {Action, SortingOptionVariants} from '../const.ts';
+import {changeCity, fillOffer, changeSorting} from './action';
 
 export type State = {
   city: City;
   offers: Offer[];
+  sorting: SortingOptionVariants;
 };
 
 const DEFAULT_CITY_NAME = 'Paris';
@@ -14,11 +15,13 @@ const DEFAULT_CITY_NAME = 'Paris';
 export const initialState: State = {
   city: getCities().find((city) => city.name === DEFAULT_CITY_NAME)!,
   offers,
+  sorting: SortingOptionVariants.Popular,
 };
 
 type Actions =
   | ReturnType<typeof changeCity>
-  | ReturnType<typeof fillOffer>;
+  | ReturnType<typeof fillOffer>
+  | ReturnType<typeof changeSorting>;
 
 export const reducer = (
   state: State = initialState,
@@ -35,6 +38,12 @@ export const reducer = (
       return {
         ...state,
         offers: action.payload,
+      };
+
+    case Action.CHANGE_SORTING:
+      return {
+        ...state,
+        sorting: action.payload,
       };
 
     default:
