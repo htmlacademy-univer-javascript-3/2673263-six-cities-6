@@ -1,5 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
-import {Action} from '../const.ts';
+import {Action, SortingOptionVariants} from '../const.ts';
 import type {City, Offer} from '../types/offer';
 
 export const changeCity = createAction(
@@ -14,4 +14,11 @@ export const fillOffer = createAction(
   (offers: Offer[]) => ({
     payload: offers,
   })
+);
+
+export const changeSorting = createAction(
+  Action.CHANGE_SORTING,
+  (sorting: SortingOptionVariants) => ({
+    payload: sorting,
+  }),
 );
