@@ -1,7 +1,10 @@
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {memo, useMemo, useCallback} from 'react';
+import {useAppDispatch, useAppSelector} from '../../hooks';
 import type {Offer} from '../../types/offer';
-import {AppRoute} from '../../const';
+import {AppRoute, AuthorizationStatus} from '../../const';
+import {toggleFavoriteAction} from '../../store/api-actions';
+import {selectAuthorizationStatus} from '../../store/selectors';
 
 type OfferCardProps = {
   offer: Offer;
@@ -43,6 +46,10 @@ const OfferCard = memo(({ offer, onHover, variant = 'cities' }: OfferCardProps):
     type,
   } = offer;
 
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
+
   const cardImage = useMemo(() => previewImage ?? images?.[0] ?? '', [previewImage, images]);
   const ratingWidth = useMemo(() => `${(rating / 5) * 100}%`, [rating]);
   const cfg = VARIANT_CFG[variant];
@@ -56,6 +63,18 @@ const OfferCard = memo(({ offer, onHover, variant = 'cities' }: OfferCardProps):
   const handleMouseLeave = useCallback(() => {
     onHover?.(null);
   }, [onHover]);
+
+  const handleBookmarkClick = useCallback((evt: React.MouseEvent<HTMLButtonElement>) => {
+    evt.preventDefault();
+    evt.stopPropagation();
+
+    if (authorizationStatus !== AuthorizationStatus.Auth) {
+      navigate(AppRoute.Login);
+      return;
+    }
+
+    dispatch(toggleFavoriteAction({ offerId: id, isFavorite: !isFavorite }));
+  }, [authorizationStatus, navigate, dispatch, id, isFavorite]);
 
   return (
     <article
@@ -92,6 +111,7 @@ const OfferCard = memo(({ offer, onHover, variant = 'cities' }: OfferCardProps):
               isFavorite ? 'place-card__bookmark-button--active' : ''
             }`}
             type="button"
+            onClick={handleBookmarkClick}
           >
             <svg className="place-card__bookmark-icon" width={18} height={19}>
               <use xlinkHref="#icon-bookmark"></use>
