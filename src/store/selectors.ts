@@ -18,6 +18,10 @@ export const selectUserAvatarUrl = (state: State) => state.userAvatarUrl;
 export const selectFavoritesCount = (state: State) =>
   state.offers.filter((offer) => offer.isFavorite).length;
 
+export const selectComments = (state: State) => state.comments;
+export const selectIsCommentsLoading = (state: State) => state.isCommentsLoading;
+export const selectIsCommentSending = (state: State) => state.isCommentSending;
+
 export const selectOffersByCity = (state: State) => {
   const {city, offers, sorting} = state;
 

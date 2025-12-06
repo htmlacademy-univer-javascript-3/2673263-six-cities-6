@@ -1,11 +1,11 @@
-import { MouseEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import {
   selectAuthorizationStatus,
-  selectUserEmail,
   selectFavoritesCount,
+  selectUserAvatarUrl,
+  selectUserEmail,
 } from '../../store/selectors';
 import { logoutAction } from '../../store/api-actions';
 
@@ -13,35 +13,37 @@ type HeaderProps = {
   isMainPage?: boolean;
 };
 
-function Header({ isMainPage = false }: HeaderProps): JSX.Element {
+function Header({ isMainPage }: HeaderProps): JSX.Element {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const authorizationStatus = useAppSelector(selectAuthorizationStatus);
   const userEmail = useAppSelector(selectUserEmail);
+  const userAvatarUrl = useAppSelector(selectUserAvatarUrl);
   const favoritesCount = useAppSelector(selectFavoritesCount);
 
-  const handleSignOutClick = (evt: MouseEvent<HTMLAnchorElement>) => {
-    evt.preventDefault();
+  const isAuth = authorizationStatus === AuthorizationStatus.Auth;
+
+  const handleSignOutClick = () => {
     dispatch(logoutAction())
       .unwrap()
-      .then(() => navigate(AppRoute.Main))
-      .catch(() => {
-      });
+      .then(() => {
+        navigate(AppRoute.Main);
+      })
+      .catch(() => {});
   };
-
-  const logoClassName = `header__logo-link${
-    isMainPage ? ' header__logo-link--active' : ''
-  }`;
-
-  const isAuth = authorizationStatus === AuthorizationStatus.Auth;
 
   return (
     <header className="header">
       <div className="container">
         <div className="header__wrapper">
           <div className="header__left">
-            <Link className={logoClassName} to={AppRoute.Main}>
+            <Link
+              className={`header__logo-link${
+                isMainPage ? ' header__logo-link--active' : ''
+              }`}
+              to={AppRoute.Main}
+            >
               <img
                 className="header__logo"
                 src="img/logo.svg"
@@ -61,7 +63,17 @@ function Header({ isMainPage = false }: HeaderProps): JSX.Element {
                       className="header__nav-link header__nav-link--profile"
                       to={AppRoute.Favorites}
                     >
-                      <div className="header__avatar-wrapper user__avatar-wrapper" />
+                      <div className="header__avatar-wrapper user__avatar-wrapper">
+                        {userAvatarUrl && (
+                          <img
+                            className="header__avatar user__avatar"
+                            src={userAvatarUrl}
+                            width={20}
+                            height={20}
+                            alt="User avatar"
+                          />
+                        )}
+                      </div>
                       <span className="header__user-name user__name">
                         {userEmail}
                       </span>
@@ -72,13 +84,14 @@ function Header({ isMainPage = false }: HeaderProps): JSX.Element {
                   </li>
 
                   <li className="header__nav-item">
-                    <a
-                      className="header__nav-link"
-                      href="#"
+                    <button
+                      className="header__nav-link button"
+                      type="button"
                       onClick={handleSignOutClick}
+                      style={{ border: 'none', background: 'none', padding: 0 }}
                     >
                       <span className="header__signout">Sign out</span>
-                    </a>
+                    </button>
                   </li>
                 </>
               ) : (

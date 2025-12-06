@@ -28,6 +28,9 @@ export enum Action {
   REQUIRE_AUTHORIZATION = 'requireAuthorization',
   SET_USER_EMAIL = 'setUserEmail',
   SET_USER_AVATAR = 'setUserAvatar',
+  FILL_COMMENTS = 'fillComments',
+  CHANGE_COMMENTS_LOADING_STATUS = 'changeCommentsLoadingStatus',
+  CHANGE_COMMENT_SENDING_STATUS = 'changeCommentSendingStatus',
 }
 
 export enum SortingOptionVariants {

@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { AxiosInstance } from 'axios';
 import type { Offer } from '../types/offer';
+import type { Review } from '../types/review';
 import { APIRoute, AuthorizationStatus } from '../const';
 import {
   changeOffersLoadingStatus,
@@ -12,8 +13,12 @@ import {
   requireAuthorization,
   setUserEmail,
   setUserAvatar,
+  fillComments,
+  changeCommentsLoadingStatus,
+  changeCommentSendingStatus,
 } from './action';
 import { saveToken, dropToken } from '../services/token';
+import type { State } from './reducer';
 
 type ThunkExtra = {
   extra: AxiosInstance;
@@ -30,6 +35,12 @@ type AuthInfo = {
 type LoginData = {
   email: string;
   password: string;
+};
+
+type CommentPostData = {
+  offerId: string;
+  comment: string;
+  rating: number;
 };
 
 export const fetchOffers = createAsyncThunk<void, undefined, ThunkExtra>(
@@ -126,4 +137,50 @@ export const logoutAction = createAsyncThunk<void, undefined, ThunkExtra>(
     }
   }
 );
+
+export const fetchComments = createAsyncThunk<void, string, ThunkExtra>(
+  'data/fetchComments',
+  async (offerId, { dispatch, extra: api }) => {
+    dispatch(changeCommentsLoadingStatus(true));
+
+    try {
+      const { data } = await api.get<Review[]>(`${APIRoute.Comments}/${offerId}`);
+      dispatch(fillComments(data));
+    } catch {
+      dispatch(fillComments([]));
+    } finally {
+      dispatch(changeCommentsLoadingStatus(false));
+    }
+  }
+);
+
+export const sendCommentAction = createAsyncThunk<
+  void,
+  CommentPostData,
+  { extra: AxiosInstance; state: State }
+>(
+  'data/sendComment',
+  async ({ offerId, comment, rating }, { dispatch, extra: api, getState }) => {
+    dispatch(changeCommentSendingStatus(true));
+
+    try {
+      const { data } = await api.post<Review[] | Review>(
+        `${APIRoute.Comments}/${offerId}`,
+        { comment, rating }
+      );
+
+      const state = getState();
+      const prevComments = state.comments;
+
+      const nextComments = Array.isArray(data)
+        ? data
+        : [...prevComments, data];
+
+      dispatch(fillComments(nextComments));
+    } finally {
+      dispatch(changeCommentSendingStatus(false));
+    }
+  }
+);
+
 
