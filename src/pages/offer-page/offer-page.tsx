@@ -5,15 +5,25 @@ import ReviewForm from '../../components/review-form/review-form';
 import ReviewsList from '../../components/reviews-list/reviews-list';
 import Map from '../../components/map/map';
 import NearbyOffersList from '../../components/nearby-offers-list/nearby-offers-list';
-import { reviews } from '../../mocks/reviews';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import {
   selectCurrentOffer,
   selectIsCurrentOfferLoading,
   selectNearbyOffers,
+  selectComments,
+  selectIsCommentsLoading,
+  selectIsCommentSending,
+  selectAuthorizationStatus,
 } from '../../store/selectors';
-import { fetchOffer, fetchNearbyOffers } from '../../store/api-actions';
+import {
+  fetchOffer,
+  fetchNearbyOffers,
+  fetchComments,
+} from '../../store/api-actions';
 import Spinner from '../../components/spinner/spinner';
+import { AuthorizationStatus } from '../../const';
+import NotFoundPage from '../not-found-page/not-found-page';
+
 
 function OfferPage(): JSX.Element {
   const { id } = useParams<{ id: string }>();
@@ -26,19 +36,29 @@ function OfferPage(): JSX.Element {
   const isCurrentOfferLoading = useAppSelector(selectIsCurrentOfferLoading);
   const nearbyOffers = useAppSelector(selectNearbyOffers);
 
+  const comments = useAppSelector(selectComments);
+  const isCommentsLoading = useAppSelector(selectIsCommentsLoading);
+  const isCommentSending = useAppSelector(selectIsCommentSending);
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
+
   useEffect(() => {
     if (id) {
       dispatch(fetchOffer(id));
       dispatch(fetchNearbyOffers(id));
+      dispatch(fetchComments(id));
     }
   }, [dispatch, id]);
 
   if (!id) {
-    return <h1>Такого предложения нет</h1>;
+    return <NotFoundPage />;
   }
 
-  if (isCurrentOfferLoading || !currentOffer) {
+  if (isCurrentOfferLoading) {
     return <Spinner />;
+  }
+
+  if (!currentOffer) {
+    return <NotFoundPage />;
   }
 
   const ratingWidth = `${(currentOffer.rating / 5) * 100}%`;
@@ -163,8 +183,18 @@ function OfferPage(): JSX.Element {
               )}
 
               <section className="offer__reviews reviews">
-                <ReviewsList reviews={reviews} />
-                <ReviewForm />
+                {isCommentsLoading ? (
+                  <Spinner />
+                ) : (
+                  <ReviewsList reviews={comments} />
+                )}
+
+                {authorizationStatus === AuthorizationStatus.Auth && (
+                  <ReviewForm
+                    offerId={currentOffer.id}
+                    isSending={isCommentSending}
+                  />
+                )}
               </section>
             </div>
           </div>

@@ -1,4 +1,5 @@
 import type { City, Offer } from '../types/offer';
+import type { Review } from '../types/review';
 import { getCities } from '../mocks/cities';
 import { Action, AuthorizationStatus, SortingOptionVariants } from '../const.ts';
 import {
@@ -13,6 +14,9 @@ import {
   requireAuthorization,
   setUserEmail,
   setUserAvatar,
+  fillComments,
+  changeCommentsLoadingStatus,
+  changeCommentSendingStatus,
 } from './action';
 
 export type State = {
@@ -27,6 +31,9 @@ export type State = {
   authorizationStatus: AuthorizationStatus;
   userEmail: string | null;
   userAvatarUrl: string | null;
+  comments: Review[];
+  isCommentsLoading: boolean;
+  isCommentSending: boolean;
 };
 
 const DEFAULT_CITY_NAME = 'Paris';
@@ -43,6 +50,9 @@ export const initialState: State = {
   authorizationStatus: AuthorizationStatus.Unknown,
   userEmail: null,
   userAvatarUrl: null,
+  comments: [],
+  isCommentsLoading: false,
+  isCommentSending: false,
 };
 
 type Actions =
@@ -56,7 +66,10 @@ type Actions =
   | ReturnType<typeof changeNearbyLoadingStatus>
   | ReturnType<typeof requireAuthorization>
   | ReturnType<typeof setUserEmail>
-  | ReturnType<typeof setUserAvatar>;
+  | ReturnType<typeof setUserAvatar>
+  | ReturnType<typeof fillComments>
+  | ReturnType<typeof changeCommentsLoadingStatus>
+  | ReturnType<typeof changeCommentSendingStatus>;
 
 export const reducer = (
   state: State = initialState,
@@ -95,6 +108,15 @@ export const reducer = (
 
     case Action.SET_USER_AVATAR:
       return { ...state, userAvatarUrl: action.payload };
+
+    case Action.FILL_COMMENTS:
+      return { ...state, comments: action.payload };
+
+    case Action.CHANGE_COMMENTS_LOADING_STATUS:
+      return { ...state, isCommentsLoading: action.payload };
+
+    case Action.CHANGE_COMMENT_SENDING_STATUS:
+      return { ...state, isCommentSending: action.payload };
 
     default:
       return state;

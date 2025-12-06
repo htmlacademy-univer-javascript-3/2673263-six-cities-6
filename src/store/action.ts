@@ -1,6 +1,7 @@
 import { createAction } from '@reduxjs/toolkit';
 import { Action, AuthorizationStatus, SortingOptionVariants } from '../const.ts';
 import type { City, Offer } from '../types/offer';
+import type { Review } from '../types/review';
 
 export const changeCity = createAction(
   Action.CHANGE_CITY,
@@ -78,3 +79,25 @@ export const setUserAvatar = createAction(
     payload: avatarUrl,
   })
 );
+
+export const fillComments = createAction(
+  Action.FILL_COMMENTS,
+  (comments: Review[]) => ({
+    payload: comments,
+  })
+);
+
+export const changeCommentsLoadingStatus = createAction(
+  Action.CHANGE_COMMENTS_LOADING_STATUS,
+  (isLoading: boolean) => ({
+    payload: isLoading,
+  })
+);
+
+export const changeCommentSendingStatus = createAction(
+  Action.CHANGE_COMMENT_SENDING_STATUS,
+  (isSending: boolean) => ({
+    payload: isSending,
+  })
+);
+
