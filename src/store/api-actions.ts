@@ -22,6 +22,7 @@ import type { State } from './reducer';
 
 type ThunkExtra = {
   extra: AxiosInstance;
+  state: State;
 };
 
 type AuthInfo = {
@@ -173,6 +174,45 @@ export const sendCommentAction = createAsyncThunk<
     } finally {
       dispatch(changeCommentSendingStatus(false));
     }
+  }
+);
+
+export const toggleFavoriteAction = createAsyncThunk<
+  Offer,
+  { offerId: string; isFavorite: boolean },
+  { extra: AxiosInstance; state: State }
+>(
+  'data/toggleFavorite',
+  async ({ offerId, isFavorite }, { dispatch, extra: api, getState }) => {
+    const { data } = await api.post<Offer>(
+      `${APIRoute.Favorite}/${offerId}/${isFavorite ? 1 : 0}`
+    );
+
+    const state = getState();
+    const offers = state.offers.offers;
+    const updatedOffers = offers.map((offer) =>
+      offer.id === offerId ? data : offer
+    );
+    dispatch(fillOffer(updatedOffers));
+
+    if (state.currentOffer.currentOffer?.id === offerId) {
+      dispatch(loadCurrentOffer(data));
+    }
+
+    return data;
+  }
+);
+
+export const fetchFavoritesAction = createAsyncThunk<void, void, ThunkExtra>(
+  'data/fetchFavorites',
+  async (_arg, { dispatch, extra: api }) => {
+    const { data: favorites } = await api.get<Offer[]>(APIRoute.Favorite);
+    const { data: allOffers } = await api.get<Offer[]>(APIRoute.Offers);
+    const updatedOffers = allOffers.map((offer) => {
+      const favorite = favorites.find((fav) => fav.id === offer.id);
+      return favorite ? { ...offer, isFavorite: true } : { ...offer, isFavorite: false };
+    });
+    dispatch(fillOffer(updatedOffers));
   }
 );
 

@@ -9,12 +9,11 @@ import FavoritesPage from '../../pages/favorites-page/favorites-page.tsx';
 import PrivateRoute from '../private-route/private-route.tsx';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { fetchOffers, checkAuthAction } from '../../store/api-actions.ts';
-import { selectOffers, selectAuthorizationStatus } from '../../store/selectors';
+import { selectAuthorizationStatus } from '../../store/selectors';
 import Spinner from '../spinner/spinner.tsx';
 
 function App(): JSX.Element {
   const dispatch = useAppDispatch();
-  const offers = useAppSelector(selectOffers);
   const authorizationStatus = useAppSelector(selectAuthorizationStatus);
 
   useEffect(() => {
@@ -41,7 +40,7 @@ function App(): JSX.Element {
           path={AppRoute.Favorites}
           element={
             <PrivateRoute>
-              <FavoritesPage offers={offers} />
+              <FavoritesPage />
             </PrivateRoute>
           }
         />

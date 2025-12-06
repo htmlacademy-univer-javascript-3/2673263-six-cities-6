@@ -16,6 +16,7 @@ import type { City } from '../../types/offer';
 import OffersList from '../../components/offers-list/offers-list.tsx';
 import Map from '../../components/map/map.tsx';
 import Spinner from '../../components/spinner/spinner.tsx';
+import MainPageEmpty from './main-page-empty.tsx';
 
 function MainPage(): JSX.Element {
   const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
@@ -60,22 +61,7 @@ function MainPage(): JSX.Element {
       </div>
     );
   } else if (isEmpty) {
-    content = (
-      <div className="cities">
-        <div className="cities__places-container cities__places-container--empty container">
-          <section className="cities__no-places">
-            <div className="cities__status-wrapper tabs__content">
-              <b className="cities__status">No places to stay available</b>
-              <p className="cities__status-description">
-                We could not find any property available at the moment in{' '}
-                {city.name}
-              </p>
-            </div>
-          </section>
-          <div className="cities__right-section"></div>
-        </div>
-      </div>
-    );
+    content = <MainPageEmpty city={city} />;
   } else {
     content = (
       <div className="cities">
