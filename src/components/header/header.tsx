@@ -9,7 +9,11 @@ import {
 } from '../../store/selectors';
 import { logoutAction } from '../../store/api-actions';
 
-function Header(): JSX.Element {
+type HeaderProps = {
+  isMainPage?: boolean;
+};
+
+function Header({ isMainPage }: HeaderProps): JSX.Element {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -26,8 +30,7 @@ function Header(): JSX.Element {
       .then(() => {
         navigate(AppRoute.Main);
       })
-      .catch(() => {
-      });
+      .catch(() => {});
   };
 
   return (
@@ -35,7 +38,12 @@ function Header(): JSX.Element {
       <div className="container">
         <div className="header__wrapper">
           <div className="header__left">
-            <Link className="header__logo-link" to={AppRoute.Main}>
+            <Link
+              className={`header__logo-link${
+                isMainPage ? ' header__logo-link--active' : ''
+              }`}
+              to={AppRoute.Main}
+            >
               <img
                 className="header__logo"
                 src="img/logo.svg"
