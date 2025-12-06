@@ -1,5 +1,5 @@
 import Header from '../../components/header/header.tsx';
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import {
   selectCity,
@@ -27,20 +27,24 @@ function MainPage(): JSX.Element {
   const sorting = useAppSelector(selectSorting);
   const isOffersLoading = useAppSelector(selectIsOffersLoading);
 
-  const offersCount = offers.length;
-  const hasOffers = offersCount > 0;
-  const isEmpty = !isOffersLoading && !hasOffers;
+  const offersCount = useMemo(() => offers.length, [offers.length]);
+  const hasOffers = useMemo(() => offersCount > 0, [offersCount]);
+  const isEmpty = useMemo(() => !isOffersLoading && !hasOffers, [isOffersLoading, hasOffers]);
 
-  const cities = getCities();
+  const cities = useMemo(() => getCities(), []);
 
-  const handleCityClick = (newCity: City) => {
+  const handleCityClick = useCallback((newCity: City) => {
     dispatch(changeCity(newCity));
     setActiveOfferId(null);
-  };
+  }, [dispatch]);
 
-  const handleSortingChange = (option: SortingOptionVariants) => {
+  const handleSortingChange = useCallback((option: SortingOptionVariants) => {
     dispatch(changeSorting(option));
-  };
+  }, [dispatch]);
+
+  const handleOfferHover = useCallback((offerId: string | null) => {
+    setActiveOfferId(offerId);
+  }, []);
 
   let content: JSX.Element;
 
@@ -86,7 +90,7 @@ function MainPage(): JSX.Element {
               onChange={handleSortingChange}
             />
 
-            <OffersList offers={offers} onOfferHover={setActiveOfferId} />
+            <OffersList offers={offers} onOfferHover={handleOfferHover} />
           </section>
 
           <div className="cities__right-section">

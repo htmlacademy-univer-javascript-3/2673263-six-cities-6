@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import OfferCard from '../offer-card/offer-card';
 import type { Offer } from '../../types/offer';
 
@@ -7,8 +8,8 @@ type OffersListProps = {
   onOfferHover?: (offerId: string | null) => void;
 };
 
-function OffersList({ offers, className, onOfferHover }: OffersListProps): JSX.Element {
-  return (
+const OffersList = memo(
+  ({ offers, className, onOfferHover }: OffersListProps): JSX.Element => (
     <div className={className ?? 'cities__places-list places__list tabs__content'}>
       {offers.map((offer) => (
         <OfferCard
@@ -18,7 +19,9 @@ function OffersList({ offers, className, onOfferHover }: OffersListProps): JSX.E
         />
       ))}
     </div>
-  );
-}
+  )
+);
+
+OffersList.displayName = 'OffersList';
 
 export default OffersList;

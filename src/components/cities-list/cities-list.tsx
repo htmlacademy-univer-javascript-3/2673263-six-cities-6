@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo, useCallback} from 'react';
 import type {City} from '../../types/offer';
 
 type CitiesListProps = {
@@ -7,8 +7,8 @@ type CitiesListProps = {
   onCityClick: (city: City) => void;
 };
 
-function CitiesList({cities, activeCity, onCityClick}: CitiesListProps): JSX.Element {
-  const handleClick = (city: City) =>
+const CitiesList = memo(({cities, activeCity, onCityClick}: CitiesListProps): JSX.Element => {
+  const handleClick = useCallback((city: City) =>
     (evt: React.MouseEvent<HTMLAnchorElement>) => {
       evt.preventDefault();
       if (city.name === activeCity.name) {
@@ -16,7 +16,8 @@ function CitiesList({cities, activeCity, onCityClick}: CitiesListProps): JSX.Ele
       }
 
       onCityClick(city);
-    };
+      evt.currentTarget.blur();
+    }, [activeCity.name, onCityClick]);
 
   return (
     <ul className="locations__list tabs__list">
@@ -37,6 +38,8 @@ function CitiesList({cities, activeCity, onCityClick}: CitiesListProps): JSX.Ele
       ))}
     </ul>
   );
-}
+});
+
+CitiesList.displayName = 'CitiesList';
 
 export default CitiesList;

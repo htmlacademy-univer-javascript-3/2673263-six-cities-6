@@ -160,23 +160,16 @@ export const sendCommentAction = createAsyncThunk<
   { extra: AxiosInstance; state: State }
 >(
   'data/sendComment',
-  async ({ offerId, comment, rating }, { dispatch, extra: api, getState }) => {
+  async ({ offerId, comment, rating }, { dispatch, extra: api }) => {
     dispatch(changeCommentSendingStatus(true));
 
     try {
-      const { data } = await api.post<Review[] | Review>(
+      await api.post<Review[] | Review>(
         `${APIRoute.Comments}/${offerId}`,
         { comment, rating }
       );
 
-      const state = getState();
-      const prevComments = state.comments;
-
-      const nextComments = Array.isArray(data)
-        ? data
-        : [...prevComments, data];
-
-      dispatch(fillComments(nextComments));
+      dispatch(fetchComments(offerId));
     } finally {
       dispatch(changeCommentSendingStatus(false));
     }

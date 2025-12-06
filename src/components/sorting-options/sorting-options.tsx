@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useCallback} from 'react';
 import {SortingOptionVariants} from '../../const';
 
 type SortingOptionsProps = {
@@ -16,16 +16,16 @@ const sortingOptions: SortingOptionVariants[] = [
 function SortingOptions({activeOption, onChange}: SortingOptionsProps): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleTypeClick = () => {
+  const handleTypeClick = useCallback(() => {
     setIsOpen((prev) => !prev);
-  };
+  }, []);
 
-  const handleOptionClick = (option: SortingOptionVariants) =>
+  const handleOptionClick = useCallback((option: SortingOptionVariants) =>
     (evt: React.MouseEvent<HTMLLIElement>) => {
       evt.preventDefault();
       onChange(option);
       setIsOpen(false);
-    };
+    }, [onChange]);
 
   return (
     <form className="places__sorting" action="#" method="get">
