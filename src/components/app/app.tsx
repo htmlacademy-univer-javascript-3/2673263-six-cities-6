@@ -1,18 +1,24 @@
-import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import {AppRoute, AuthorizationStatus} from '../../const.ts';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { useEffect } from 'react';
+import { AppRoute, AuthorizationStatus } from '../../const.ts';
 import MainPage from '../../pages/main-page/main-page';
 import NotFoundPage from '../../pages/not-found-page/not-found-page.tsx';
 import LoginPage from '../../pages/login-page/login-page';
 import OfferPage from '../../pages/offer-page/offer-page.tsx';
 import FavoritesPage from '../../pages/favorites-page/favorites-page.tsx';
 import PrivateRoute from '../private-route/private-route.tsx';
-import type {Offer} from '../../types/offer.ts';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { fetchOffers } from '../../store/api-actions';
+import { selectOffers } from '../../store/selectors';
 
-type AppProps = {
-  offers: Offer[];
-};
+function App(): JSX.Element {
+  const dispatch = useAppDispatch();
+  const offers = useAppSelector(selectOffers);
 
-function App({ offers }: AppProps): JSX.Element {
+  useEffect(() => {
+    dispatch(fetchOffers());
+  }, [dispatch]);
+
   return (
     <BrowserRouter>
       <Routes>
@@ -27,9 +33,7 @@ function App({ offers }: AppProps): JSX.Element {
         <Route
           path={AppRoute.Favorites}
           element={
-            <PrivateRoute
-              authorizationStatus={AuthorizationStatus.NoAuth}
-            >
+            <PrivateRoute authorizationStatus={AuthorizationStatus.NoAuth}>
               <FavoritesPage offers={offers} />
             </PrivateRoute>
           }
