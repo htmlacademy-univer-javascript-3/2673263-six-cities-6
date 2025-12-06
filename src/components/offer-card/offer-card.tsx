@@ -1,4 +1,5 @@
 import {Link} from 'react-router-dom';
+import {memo, useMemo, useCallback} from 'react';
 import type {Offer} from '../../types/offer';
 import {AppRoute} from '../../const';
 
@@ -29,7 +30,7 @@ const VARIANT_CFG = {
   },
 } as const;
 
-function OfferCard({ offer, onHover, variant = 'cities' }: OfferCardProps): JSX.Element {
+const OfferCard = memo(({ offer, onHover, variant = 'cities' }: OfferCardProps): JSX.Element => {
   const {
     id,
     isPremium,
@@ -42,17 +43,25 @@ function OfferCard({ offer, onHover, variant = 'cities' }: OfferCardProps): JSX.
     type,
   } = offer;
 
-  const cardImage = previewImage ?? images?.[0] ?? '';
-  const ratingWidth = `${(rating / 5) * 100}%`;
+  const cardImage = useMemo(() => previewImage ?? images?.[0] ?? '', [previewImage, images]);
+  const ratingWidth = useMemo(() => `${(rating / 5) * 100}%`, [rating]);
   const cfg = VARIANT_CFG[variant];
 
-  const linkTo = `${AppRoute.Offer}/${id}`;
+  const linkTo = useMemo(() => `${AppRoute.Offer}/${id}`, [id]);
+
+  const handleMouseEnter = useCallback(() => {
+    onHover?.(id);
+  }, [onHover, id]);
+
+  const handleMouseLeave = useCallback(() => {
+    onHover?.(null);
+  }, [onHover]);
 
   return (
     <article
       className={cfg.article}
-      onMouseEnter={onHover ? () => onHover(id) : undefined}
-      onMouseLeave={onHover ? () => onHover(null) : undefined}
+      onMouseEnter={onHover ? handleMouseEnter : undefined}
+      onMouseLeave={onHover ? handleMouseLeave : undefined}
     >
       {isPremium && (
         <div className="place-card__mark">
@@ -107,6 +116,8 @@ function OfferCard({ offer, onHover, variant = 'cities' }: OfferCardProps): JSX.
       </div>
     </article>
   );
-}
+});
+
+OfferCard.displayName = 'OfferCard';
 
 export default OfferCard;
