@@ -1,0 +1,28 @@
+.spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.spinner__circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #4481c3;
+  animation: spinner-rotate 0.8s linear infinite;
+  margin-bottom: 12px;
+}
+
+.spinner__text {
+  font-size: 16px;
+  color: #4481c3;
+}
+
+@keyframes spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}

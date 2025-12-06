@@ -34,6 +34,7 @@ function OfferCard({ offer, onHover, variant = 'cities' }: OfferCardProps): JSX.
     id,
     isPremium,
     images,
+    previewImage,
     price,
     isFavorite,
     rating,
@@ -41,14 +42,11 @@ function OfferCard({ offer, onHover, variant = 'cities' }: OfferCardProps): JSX.
     type,
   } = offer;
 
-  const previewImage = images[0];
+  const cardImage = previewImage ?? images?.[0] ?? '';
   const ratingWidth = `${(rating / 5) * 100}%`;
   const cfg = VARIANT_CFG[variant];
 
-  const linkTo =
-    variant === 'near-places'
-      ? '/'
-      : `${AppRoute.Offer}/${id}`;
+  const linkTo = `${AppRoute.Offer}/${id}`;
 
   return (
     <article
@@ -66,7 +64,7 @@ function OfferCard({ offer, onHover, variant = 'cities' }: OfferCardProps): JSX.
         <Link to={linkTo}>
           <img
             className="place-card__image"
-            src={previewImage}
+            src={cardImage}
             width={cfg.size.width}
             height={cfg.size.height}
             alt={title}

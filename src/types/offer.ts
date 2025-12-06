@@ -24,6 +24,7 @@ export type Offer = {
   type: OfferType;
   price: number;
   images: string[];
+  previewImage?: string;
   city: City;
   location: Location;
   goods: string[];

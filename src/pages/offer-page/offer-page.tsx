@@ -1,28 +1,50 @@
-import {Link, useParams} from 'react-router-dom';
-import {useState} from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import ReviewForm from '../../components/review-form/review-form';
 import ReviewsList from '../../components/reviews-list/reviews-list';
 import Map from '../../components/map/map';
 import NearbyOffersList from '../../components/nearby-offers-list/nearby-offers-list';
-import {offers} from '../../mocks/offers';
-import {reviews} from '../../mocks/reviews';
-import type {Offer} from '../../types/offer';
+import { reviews } from '../../mocks/reviews';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import {
+  selectCurrentOffer,
+  selectIsCurrentOfferLoading,
+  selectNearbyOffers,
+} from '../../store/selectors';
+import { fetchOffer, fetchNearbyOffers } from '../../store/api-actions';
+import Spinner from '../../components/spinner/spinner';
 
 function OfferPage(): JSX.Element {
-  const {id} = useParams<{ id: string }>();
-  const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
-  const currentOffer: Offer | undefined = offers.find((offer) => offer.id === id);
+  const { id } = useParams<{ id: string }>();
 
-  if (!currentOffer) {
+  const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
+
+  const dispatch = useAppDispatch();
+
+  const currentOffer = useAppSelector(selectCurrentOffer);
+  const isCurrentOfferLoading = useAppSelector(selectIsCurrentOfferLoading);
+  const nearbyOffers = useAppSelector(selectNearbyOffers);
+
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchOffer(id));
+      dispatch(fetchNearbyOffers(id));
+    }
+  }, [dispatch, id]);
+
+  if (!id) {
     return <h1>Такого предложения нет</h1>;
   }
 
-  const nearbyOffers = offers
-    .filter((offer) => offer.id !== currentOffer.id)
-    .slice(0, 3);
-
+  if (isCurrentOfferLoading || !currentOffer) {
+    return <Spinner />;
+  }
 
   const ratingWidth = `${(currentOffer.rating / 5) * 100}%`;
+
+  const nearbyForList = nearbyOffers.slice(0, 3);
+
+  const offersForMap = [currentOffer, ...nearbyForList];
 
   return (
     <div className="page">
@@ -43,7 +65,10 @@ function OfferPage(): JSX.Element {
             <nav className="header__nav">
               <ul className="header__nav-list">
                 <li className="header__nav-item user">
-                  <a className="header__nav-link header__nav-link--profile" href="#">
+                  <a
+                    className="header__nav-link header__nav-link--profile"
+                    href="#"
+                  >
                     <div className="header__avatar-wrapper user__avatar-wrapper" />
                     <span className="header__user-name user__name">
                       Oliver.conner@gmail.com
@@ -66,9 +91,13 @@ function OfferPage(): JSX.Element {
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              {currentOffer.images.map((img) => (
+              {(currentOffer.images ?? []).slice(0, 6).map((img) => (
                 <div className="offer__image-wrapper" key={img}>
-                  <img className="offer__image" src={img} alt={currentOffer.title} />
+                  <img
+                    className="offer__image"
+                    src={img}
+                    alt={currentOffer.title}
+                  />
                 </div>
               ))}
             </div>
@@ -96,7 +125,7 @@ function OfferPage(): JSX.Element {
 
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
-                  <span style={{width: ratingWidth}}></span>
+                  <span style={{ width: ratingWidth }}></span>
                   <span className="visually-hidden">Rating</span>
                 </div>
                 <span className="offer__rating-value rating__value">
@@ -110,7 +139,7 @@ function OfferPage(): JSX.Element {
                 </li>
                 <li className="offer__feature offer__feature--bedrooms">
                   {currentOffer.bedrooms} Bedroom
-                  {currentOffer.bedrooms > 1 ? 's' : ''}
+                  {currentOffer.bedrooms && currentOffer.bedrooms > 1 ? 's' : ''}
                 </li>
                 <li className="offer__feature offer__feature--adults">
                   Max {currentOffer.maxAdults} adults
@@ -118,14 +147,16 @@ function OfferPage(): JSX.Element {
               </ul>
 
               <div className="offer__price">
-                <b className="offer__price-value">&euro;{currentOffer.price}</b>
+                <b className="offer__price-value">
+                  &euro;{currentOffer.price}
+                </b>
                 <span className="offer__price-text">&nbsp;night</span>
               </div>
 
               <div className="offer__inside">
                 <h2 className="offer__inside-title">What&apos;s inside</h2>
                 <ul className="offer__inside-list">
-                  {currentOffer.goods.map((good) => (
+                  {(currentOffer.goods ?? []).map((good) => (
                     <li className="offer__inside-item" key={good}>
                       {good}
                     </li>
@@ -133,31 +164,39 @@ function OfferPage(): JSX.Element {
                 </ul>
               </div>
 
-              <div className="offer__host">
-                <h2 className="offer__host-title">Meet the host</h2>
-                <div className="offer__host-user user">
-                  <div
-                    className={`offer__avatar-wrapper ${
-                      currentOffer.host.isPro ? 'offer__avatar-wrapper--pro' : ''
-                    } user__avatar-wrapper`}
-                  >
-                    <img
-                      className="offer__avatar user__avatar"
-                      src={currentOffer.host.avatarUrl}
-                      width="74"
-                      height="74"
-                      alt="Host avatar"
-                    />
+              {currentOffer.host && (
+                <div className="offer__host">
+                  <h2 className="offer__host-title">Meet the host</h2>
+                  <div className="offer__host-user user">
+                    <div
+                      className={`offer__avatar-wrapper ${
+                        currentOffer.host.isPro
+                          ? 'offer__avatar-wrapper--pro'
+                          : ''
+                      } user__avatar-wrapper`}
+                    >
+                      <img
+                        className="offer__avatar user__avatar"
+                        src={currentOffer.host.avatarUrl}
+                        width="74"
+                        height="74"
+                        alt="Host avatar"
+                      />
+                    </div>
+                    <span className="offer__user-name">
+                      {currentOffer.host.name}
+                    </span>
+                    {currentOffer.host.isPro && (
+                      <span className="offer__user-status">Pro</span>
+                    )}
                   </div>
-                  <span className="offer__user-name">{currentOffer.host.name}</span>
-                  {currentOffer.host.isPro && (
-                    <span className="offer__user-status">Pro</span>
-                  )}
+                  <div className="offer__description">
+                    <p className="offer__text">
+                      {currentOffer.description}
+                    </p>
+                  </div>
                 </div>
-                <div className="offer__description">
-                  <p className="offer__text">{currentOffer.description}</p>
-                </div>
-              </div>
+              )}
 
               <section className="offer__reviews reviews">
                 <ReviewsList reviews={reviews} />
@@ -168,8 +207,8 @@ function OfferPage(): JSX.Element {
 
           <Map
             city={currentOffer.city}
-            offers={nearbyOffers}
-            activeOfferId={activeOfferId}
+            offers={offersForMap}
+            activeOfferId={activeOfferId ?? currentOffer.id}
             className="offer__map map"
           />
         </section>
@@ -181,7 +220,7 @@ function OfferPage(): JSX.Element {
             </h2>
 
             <NearbyOffersList
-              offers={nearbyOffers}
+              offers={nearbyForList}
               onOfferHover={setActiveOfferId}
             />
           </section>
