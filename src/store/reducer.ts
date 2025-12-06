@@ -1,6 +1,6 @@
 import type { City, Offer } from '../types/offer';
 import { getCities } from '../mocks/cities';
-import { Action, SortingOptionVariants } from '../const.ts';
+import { Action, AuthorizationStatus, SortingOptionVariants } from '../const.ts';
 import {
   changeCity,
   fillOffer,
@@ -10,6 +10,9 @@ import {
   changeCurrentOfferLoadingStatus,
   fillNearby,
   changeNearbyLoadingStatus,
+  requireAuthorization,
+  setUserEmail,
+  setUserAvatar,
 } from './action';
 
 export type State = {
@@ -21,6 +24,9 @@ export type State = {
   isCurrentOfferLoading: boolean;
   nearbyOffers: Offer[];
   isNearbyLoading: boolean;
+  authorizationStatus: AuthorizationStatus;
+  userEmail: string | null;
+  userAvatarUrl: string | null;
 };
 
 const DEFAULT_CITY_NAME = 'Paris';
@@ -34,6 +40,9 @@ export const initialState: State = {
   isCurrentOfferLoading: false,
   nearbyOffers: [],
   isNearbyLoading: false,
+  authorizationStatus: AuthorizationStatus.Unknown,
+  userEmail: null,
+  userAvatarUrl: null,
 };
 
 type Actions =
@@ -44,7 +53,10 @@ type Actions =
   | ReturnType<typeof loadCurrentOffer>
   | ReturnType<typeof changeCurrentOfferLoadingStatus>
   | ReturnType<typeof fillNearby>
-  | ReturnType<typeof changeNearbyLoadingStatus>;
+  | ReturnType<typeof changeNearbyLoadingStatus>
+  | ReturnType<typeof requireAuthorization>
+  | ReturnType<typeof setUserEmail>
+  | ReturnType<typeof setUserAvatar>;
 
 export const reducer = (
   state: State = initialState,
@@ -74,6 +86,15 @@ export const reducer = (
 
     case Action.CHANGE_NEARBY_LOADING_STATUS:
       return { ...state, isNearbyLoading: action.payload };
+
+    case Action.REQUIRE_AUTHORIZATION:
+      return { ...state, authorizationStatus: action.payload };
+
+    case Action.SET_USER_EMAIL:
+      return { ...state, userEmail: action.payload };
+
+    case Action.SET_USER_AVATAR:
+      return { ...state, userAvatarUrl: action.payload };
 
     default:
       return state;

@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import { Action, SortingOptionVariants } from '../const.ts';
+import { Action, AuthorizationStatus, SortingOptionVariants } from '../const.ts';
 import type { City, Offer } from '../types/offer';
 
 export const changeCity = createAction(
@@ -55,5 +55,26 @@ export const changeNearbyLoadingStatus = createAction(
   Action.CHANGE_NEARBY_LOADING_STATUS,
   (isLoading: boolean) => ({
     payload: isLoading,
+  })
+);
+
+export const requireAuthorization = createAction(
+  Action.REQUIRE_AUTHORIZATION,
+  (status: AuthorizationStatus) => ({
+    payload: status,
+  })
+);
+
+export const setUserEmail = createAction(
+  Action.SET_USER_EMAIL,
+  (email: string | null) => ({
+    payload: email,
+  })
+);
+
+export const setUserAvatar = createAction(
+  Action.SET_USER_AVATAR,
+  (avatarUrl: string | null) => ({
+    payload: avatarUrl,
   })
 );

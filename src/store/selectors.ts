@@ -12,6 +12,12 @@ export const selectIsCurrentOfferLoading = (state: State) =>
 export const selectNearbyOffers = (state: State) => state.nearbyOffers;
 export const selectIsNearbyLoading = (state: State) => state.isNearbyLoading;
 
+export const selectAuthorizationStatus = (state: State) => state.authorizationStatus;
+export const selectUserEmail = (state: State) => state.userEmail;
+export const selectUserAvatarUrl = (state: State) => state.userAvatarUrl;
+export const selectFavoritesCount = (state: State) =>
+  state.offers.filter((offer) => offer.isFavorite).length;
+
 export const selectOffersByCity = (state: State) => {
   const {city, offers, sorting} = state;
 

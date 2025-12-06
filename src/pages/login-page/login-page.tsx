@@ -1,13 +1,46 @@
-import {Link} from 'react-router-dom';
+import { FormEvent, useState } from 'react';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { AppRoute, AuthorizationStatus } from '../../const';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { loginAction } from '../../store/api-actions';
+import { selectAuthorizationStatus } from '../../store/selectors';
 
 function LoginPage(): JSX.Element {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  if (authorizationStatus === AuthorizationStatus.Auth) {
+    return <Navigate to={AppRoute.Main} />;
+  }
+
+  const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+
+    if (!email || !password.trim()) {
+      return;
+    }
+
+    dispatch(loginAction({ email, password }))
+      .unwrap()
+      .then(() => {
+        navigate(AppRoute.Main);
+      })
+      .catch(() => {
+      });
+  };
+
   return (
     <div className="page page--gray page--login">
       <header className="header">
         <div className="container">
           <div className="header__wrapper">
             <div className="header__left">
-              <Link className="header__logo-link" to="/">
+              <Link className="header__logo-link" to={AppRoute.Main}>
                 <img
                   className="header__logo"
                   src="img/logo.svg"
@@ -25,7 +58,7 @@ function LoginPage(): JSX.Element {
         <div className="page__login-container container">
           <section className="login">
             <h1 className="login__title">Sign in</h1>
-            <form className="login__form form" action="#" method="post">
+            <form className="login__form form" action="#" method="post" onSubmit={handleSubmit}>
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden" htmlFor="email">E-mail</label>
                 <input
@@ -34,6 +67,8 @@ function LoginPage(): JSX.Element {
                   type="email"
                   name="email"
                   placeholder="Email"
+                  value={email}
+                  onChange={(evt) => setEmail(evt.target.value)}
                   required
                 />
               </div>
@@ -46,6 +81,8 @@ function LoginPage(): JSX.Element {
                   type="password"
                   name="password"
                   placeholder="Password"
+                  value={password}
+                  onChange={(evt) => setPassword(evt.target.value)}
                   required
                 />
               </div>

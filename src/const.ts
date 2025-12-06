@@ -14,7 +14,6 @@ export enum AuthorizationStatus {
 export const [MIN_COMMENT_LENGTH, MAX_COMMENT_LENGTH] = [50, 1945];
 
 export const URL_MARKER_DEFAULT = 'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/pin.svg';
-
 export const URL_MARKER_CURRENT = 'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/main-pin.svg';
 
 export enum Action {
@@ -26,6 +25,9 @@ export enum Action {
   FILL_NEARBY = 'fillNearby',
   CHANGE_CURRENT_OFFER_LOADING_STATUS = 'changeCurrentOfferLoadingStatus',
   CHANGE_NEARBY_LOADING_STATUS = 'changeNearbyLoadingStatus',
+  REQUIRE_AUTHORIZATION = 'requireAuthorization',
+  SET_USER_EMAIL = 'setUserEmail',
+  SET_USER_AVATAR = 'setUserAvatar',
 }
 
 export enum SortingOptionVariants {
@@ -44,3 +46,5 @@ export enum APIRoute {
   Logout = '/logout',
   Comments = '/comments',
 }
+
+export const AUTH_TOKEN_KEY_NAME = 'six-cities-token';
