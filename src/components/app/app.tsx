@@ -8,16 +8,23 @@ import OfferPage from '../../pages/offer-page/offer-page.tsx';
 import FavoritesPage from '../../pages/favorites-page/favorites-page.tsx';
 import PrivateRoute from '../private-route/private-route.tsx';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { fetchOffers } from '../../store/api-actions';
-import { selectOffers } from '../../store/selectors';
+import { fetchOffers, checkAuthAction } from '../../store/api-actions.ts';
+import { selectOffers, selectAuthorizationStatus } from '../../store/selectors';
+import Spinner from '../spinner/spinner.tsx';
 
 function App(): JSX.Element {
   const dispatch = useAppDispatch();
   const offers = useAppSelector(selectOffers);
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
 
   useEffect(() => {
+    dispatch(checkAuthAction());
     dispatch(fetchOffers());
   }, [dispatch]);
+
+  if (authorizationStatus === AuthorizationStatus.Unknown) {
+    return <Spinner />;
+  }
 
   return (
     <BrowserRouter>
@@ -33,7 +40,7 @@ function App(): JSX.Element {
         <Route
           path={AppRoute.Favorites}
           element={
-            <PrivateRoute authorizationStatus={AuthorizationStatus.NoAuth}>
+            <PrivateRoute>
               <FavoritesPage offers={offers} />
             </PrivateRoute>
           }
