@@ -2,13 +2,11 @@ import ReviewItem from '../review-item/review-item';
 import type { Review } from '../../types/review';
 
 type ReviewsListProps = {
-  reviews: Review[] | unknown;
+  reviews: Review[];
 };
 
 function ReviewsList({ reviews }: ReviewsListProps): JSX.Element {
-  const safeReviews: Review[] = Array.isArray(reviews) ? reviews : [];
-
-  const sorted = [...safeReviews]
+  const sorted = [...reviews]
     .sort(
       (a, b) =>
         new Date(b.date).getTime() - new Date(a.date).getTime()
