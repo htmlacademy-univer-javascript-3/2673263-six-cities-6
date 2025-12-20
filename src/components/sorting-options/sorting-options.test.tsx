@@ -13,7 +13,6 @@ describe('Component: SortingOptions', () => {
 
     expect(screen.getByText('Sort by')).toBeInTheDocument();
 
-    // "Popular" встречается дважды: текущая опция + пункт списка
     expect(screen.getAllByText(SortingOptionVariants.Popular).length).toBeGreaterThanOrEqual(2);
 
     expect(screen.getByText(SortingOptionVariants.PriceLowToHigh)).toBeInTheDocument();
